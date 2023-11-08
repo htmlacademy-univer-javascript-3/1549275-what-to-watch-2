@@ -54,7 +54,6 @@ function MainPage (): JSX.Element {
               <ShowMoreBtn clickHandler={handleBtnClick}/>
             )
           }
-          
         </section>
 
         <Footer/>
