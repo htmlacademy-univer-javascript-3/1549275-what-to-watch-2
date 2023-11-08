@@ -7,15 +7,25 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { FilmData } from '../../types';
 import GenreList from '../../components/GenreList/GenreList';
 import { filmsData } from '../../mocks/films';
+import { ShowMoreBtn } from '../../components/ui';
+
+const START_CARDS_COUNT = 8;
 
 function MainPage (): JSX.Element {
 
+  const [cardsCount, setCardsCount] = useState(START_CARDS_COUNT);
   const dispatch = useAppDispatch();
   const genreName = useAppSelector((state) => state.genre);
   const films = useAppSelector((state) => state.films);
 
   const [firstFilm] = films;
   const [filmPreview, setFilmPreview] = useState(firstFilm);
+
+  const handleBtnClick = () => {
+    if (cardsCount < films.length) {
+      setCardsCount((prevState) => prevState + START_CARDS_COUNT);
+    }
+  };
 
   const handleFilmCardClick = (film: FilmData) => {
     setFilmPreview(film);
@@ -24,6 +34,7 @@ function MainPage (): JSX.Element {
   const handleGenreClick = (genre: string) => {
     dispatch(changeGenre({genre}));
     dispatch(getFilmsByGenre({genre}));
+    setCardsCount(START_CARDS_COUNT);
   };
 
   return (
@@ -36,11 +47,14 @@ function MainPage (): JSX.Element {
 
           <GenreList filmsData={filmsData} activeGenre={genreName} clickHandler={handleGenreClick}/>
 
-          <FilmList filmsData={films} clickHandler={handleFilmCardClick}/>
+          <FilmList maxCards={cardsCount} filmsData={films} clickHandler={handleFilmCardClick}/>
 
-          <div className="catalog__more">
-            <button className="catalog__button" type="button">Show more</button>
-          </div>
+          {
+            cardsCount < films.length && (
+              <ShowMoreBtn clickHandler={handleBtnClick}/>
+            )
+          }
+          
         </section>
 
         <Footer/>
