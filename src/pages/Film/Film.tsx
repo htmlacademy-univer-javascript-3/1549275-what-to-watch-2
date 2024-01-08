@@ -1,98 +1,107 @@
 import React, { useLayoutEffect } from 'react';
-import Logo from '../../components/logo';
-import UserBlock from '../../components/user-block/user-block';
-import Page404 from '../page404';
-import { useParams } from 'react-router-dom';
-import Buttons from '../../components/buttons';
-import LikeThis from './like-this';
-import LOCALE from './film.locale';
-import { fetchFilmAction, fetchReviewsFilm, fetchSimilarFilm } from '../../store/api-action';
-import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import LoadingSreen from '../loading-sreen';
-import FilmInfo from './film-info';
-import {
-  getFilm,
-  getFilmDataLoadingStatus,
-  getFilmErrorStatus,
-  getReviewsFilm,
-  getSimilarFilms
-} from '../../store/film/film.selectors';
-import { getAuthCheckedStatus } from '../../store/user/user.selectors';
-import { resetFilm } from '../../store/film/film.slices';
+import { Header } from '../../components/header';
+import { FilmCardButtons } from '../../components/film-card/components/film-card-buttons';
+import { FilmsList } from '../../components/catalog/components/films-list';
+import { Footer } from '../../components/footer';
+import { Navigate, useParams } from 'react-router-dom';
+import { RouteLinks } from '../../router/consts';
+import { Poster } from '../../components/poster';
+import { FilmDescription } from '../../components/film-descrtipion/film-description';
+import { useAppDispatch, useAppSelector } from '../../hooks/store';
+import { Spinner } from '../../components/spinner/spinner';
+import { ReducerName } from '../../types/reducer-name';
+import { fetchFilm, fetchReviews, fetchSimilar } from '../../store/api-actions';
+import { AuthorizationStatus } from '../../types/authorization-status';
+import { Page404 } from '../page-404';
 
-const Film: React.FC = () => {
-  const params = useParams();
+const FilmPage: React.FC = () => {
+  const { id } = useParams();
+
+  const isAuth =
+    useAppSelector(
+      (state) => state[ReducerName.Authorzation].authorizationStatus
+    ) === AuthorizationStatus.Authorized;
+
   const dispatch = useAppDispatch();
-  const film = useAppSelector(getFilm);
-  const reviewsFilm = useAppSelector(getReviewsFilm);
-  const similarFilms = useAppSelector(getSimilarFilms);
-  const hasError = useAppSelector(getFilmErrorStatus);
-  const isFilmDataLoading = useAppSelector(getFilmDataLoadingStatus);
-  const isAuth = useAppSelector(getAuthCheckedStatus);
+  const film = useAppSelector((state) => state[ReducerName.Film].film);
+  const isLoading = useAppSelector(
+    (state) => state[ReducerName.Film].isLoading
+  );
+
+  const similar = useAppSelector((state) => state[ReducerName.Film].similar);
 
   useLayoutEffect(() => {
-    if (params.id) {
-      dispatch(fetchFilmAction({ filmId: params.id }));
-      dispatch(fetchSimilarFilm({ filmId: params.id }));
-      dispatch(fetchReviewsFilm({ filmId: params.id }));
+    let isMounted = true;
+
+    if (isMounted && id) {
+      dispatch(fetchFilm(id));
+      dispatch(fetchSimilar(id));
+      dispatch(fetchReviews(id));
     }
     return () => {
-      dispatch(resetFilm());
+      isMounted = false;
     };
-  }, [params.id, dispatch]);
+  }, [id, dispatch]);
 
-  if (isFilmDataLoading) {
-    return <LoadingSreen />;
+  if (isLoading) {
+    return <Spinner view='display' />;
   }
 
-  if (hasError || film === null) {
-    return <Page404 />;
+  if (!id) {
+    return <Navigate to={RouteLinks.NOT_FOUND} />;
   }
 
-  return (
+  return film ? (
     <>
-      <section className="film-card film-card--full" style={{ background: film.backgroundColor }}>
+      <section
+        className="film-card film-card--full"
+        style={{ backgroundColor: film.backgroundColor }}
+      >
         <div className="film-card__hero">
           <div className="film-card__bg">
-            <img
-              src={film.backgroundImage}
-              alt={film.name}
-            />
+            <img src={film.backgroundImage} alt={film.name} />
           </div>
 
-          <h1 className="visually-hidden">{LOCALE.WTW}</h1>
-
-          <header className="page-header film-card__head">
-            <Logo />
-            <UserBlock />
-          </header>
+          <Header className="film-card__head" />
 
           <div className="film-card__wrap">
             <div className="film-card__desc">
               <h2 className="film-card__title">{film.name}</h2>
               <p className="film-card__meta">
-                <span className="film-card__genre">
-                  {film.genre}
-                </span>
-                <span className="film-card__year">
-                  {film.released}
-                </span>
+                <span className="film-card__genre">{film.genre}</span>
+                <span className="film-card__year">{film.released}</span>
               </p>
 
-              <div className="film-card__buttons">
-                <Buttons.Play id={film.id} />
-                <Buttons.FilmCard id={film.id} />
-                {isAuth ? <Buttons.AddReview id={film.id} /> : null}
-              </div>
+              <FilmCardButtons filmId={film.id} reviewButton={isAuth} isFavorite={film.isFavorite} />
             </div>
           </div>
         </div>
 
-        <FilmInfo film={film} reviewsFilm={reviewsFilm} />
+        <div className="film-card__wrap film-card__translate-top">
+          <div className="film-card__info">
+            <Poster
+              src={film.posterImage}
+              alt={film.name}
+              className="film-card__poster--big"
+            />
+
+            <FilmDescription film={film} />
+          </div>
+        </div>
       </section>
-      {similarFilms.length !== 0 ? <LikeThis similarFilms={similarFilms} backgroundColor={film.backgroundColor} /> : null}
+      <div className="page-content">
+        {!!similar.length && (
+          <section className="catalog catalog--like-this">
+            <h2 className="catalog__title">More like this</h2>
+            <FilmsList films={similar} />
+          </section>
+        )}
+
+        <Footer />
+      </div>
     </>
+  ) : (
+    <Page404 />
   );
 };
-
-export default Film;
+export const Film = React.memo(FilmPage);

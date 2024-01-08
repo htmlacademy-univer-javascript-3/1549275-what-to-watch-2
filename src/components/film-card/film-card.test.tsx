@@ -1,94 +1,70 @@
 import { render, screen } from '@testing-library/react';
-import { configureMockStore } from '@jedmao/redux-mock-store';
-import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import thunk from 'redux-thunk';
-import films from '../../mock/films';
-import { NameSpace } from '../../data/constants/name-space';
-import FilmCard from './film-card';
-import { AuthorizationStatus } from '../../data/enums/authorization-status';
-import { State } from '../../data/types/store';
+import { Provider } from 'react-redux';
+import { configureMockStore } from '@jedmao/redux-mock-store';
+import films from '../../mocks/films';
+import { FilmCard } from './film-card';
+import { ReducerName } from '../../types/reducer-name';
+import { AuthorizationStatus } from '../../types/authorization-status';
+import { Genre } from '../../types/genre';
+
+const mockStore = configureMockStore();
 
 const mockFilm = films[0];
-const mockStore = configureMockStore<State>([thunk]);
 
-describe('Film Card Component', () => {
-  it('should render without errors', () => {
-    const store = mockStore({
-      [NameSpace.User]: {
-        authorizationStatus: AuthorizationStatus.Auth
-      },
-      [NameSpace.Promo]: {
-        promo: mockFilm,
-        isPromoDataLoading: false,
-        hasError: false
-      },
-      [NameSpace.Favorite]: {
-        favoriteFilms: [],
-        isFavoriteLoading: false
-      }
-    });
+describe('FilmCard Component', () => {
+  const initialState = {
+    [ReducerName.Authorzation]: {
+      authorizationStatus: AuthorizationStatus.Authorized,
+      user: null,
+    },
+    [ReducerName.Film]: {
+      film: mockFilm,
+      reviews: [],
+      similar: [],
+      isLoading: false,
+    },
+    [ReducerName.Main]: {
+      films: [mockFilm],
+      genreFilms: [],
+      currentGenre: Genre.DefaultGenre,
+      isFilmsLoading: false,
+      error: null,
+      promo: mockFilm,
+      favoriteFilms: [],
+      favoriteCount: 0,
+    },
+  };
+
+  it('should render the film card with correct details', () => {
+    const store = mockStore(initialState);
 
     render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <FilmCard />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <FilmCard film={mockFilm} />
+        </MemoryRouter>
+      </Provider>
     );
 
-    expect(screen.getByText(/Snatch/i)).toBeInTheDocument();
-    expect(screen.getByText(/Play/i)).toBeInTheDocument();
-    expect(screen.getByText(/My list/i)).toBeInTheDocument();
+    expect(screen.getByText(mockFilm.name)).toBeInTheDocument();
+    expect(screen.getByText(mockFilm.genre)).toBeInTheDocument();
+    expect(screen.getByText(mockFilm.released)).toBeInTheDocument();
   });
 
-  it('should render loading screen', () => {
-    const store = mockStore({
-      [NameSpace.Promo]: {
-        promo: mockFilm,
-        isPromoDataLoading: true,
-        hasError: false
-      },
-      [NameSpace.Favorite]: {
-        favoriteFilms: [],
-        isFavoriteLoading: false
-      }
-    });
+  it('should have the correct alt text for the background image', () => {
+    const store = mockStore(initialState);
 
     render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <FilmCard />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <FilmCard film={mockFilm} />
+        </MemoryRouter>
+      </Provider>
     );
 
-    const loadingScreen = screen.getByTestId('loading-screen');
+    const backgroundImageElement = screen.getByTestId('film-background-image');
 
-    expect(loadingScreen).toBeInTheDocument();
-  });
-
-  it('should render error screen', () => {
-    const store = mockStore({
-      [NameSpace.Promo]: {
-        promo: mockFilm,
-        isPromoDataLoading: false,
-        hasError: true
-      },
-      [NameSpace.Favorite]: {
-        favoriteFilms: [],
-        isFavoriteLoading: false
-      }
-    });
-
-    render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <FilmCard />
-        </Provider>
-      </MemoryRouter>
-    );
-
-    expect(screen.getByText(/Ошибка 404. Страница не существует./i)).toBeInTheDocument();
+    expect(backgroundImageElement).toHaveAttribute('alt', mockFilm.name);
   });
 });

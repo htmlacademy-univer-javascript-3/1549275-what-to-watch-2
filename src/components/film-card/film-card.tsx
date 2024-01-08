@@ -1,50 +1,41 @@
 import React from 'react';
-import LOCALE from './film-card.locale';
-import Logo from '../logo/logo';
-import UserBlock from '../user-block/user-block';
-import Buttons from './buttons';
-import { useAppSelector } from '../../hooks/hooks';
-import LoadingSreen from '../../pages/loading-sreen';
-import { getPromo, getPromoDataLoadingStatus, getPromoErrorStatus } from '../../store/promo/promo.selectors';
-import Page404 from '../../pages/page404';
+import { Header } from '../header';
+import { FilmCardButtons } from './components/film-card-buttons';
+import { Poster } from '../poster';
+import { Film } from '../../types/film';
 
-const FilmCard: React.FC = () => {
-  const promo = useAppSelector(getPromo);
-  const dataLoadingStatus = useAppSelector(getPromoDataLoadingStatus);
-  const hasError = useAppSelector(getPromoErrorStatus);
-  if (dataLoadingStatus) {
-    return <LoadingSreen />;
-  }
-  if (hasError || promo === null) {
-    return <Page404 />;
-  }
+interface FilmCardProps {
+  film: Film;
+}
+
+const enum PosterSize {
+  WIDTH = 218,
+  HEIGHT = 327,
+}
+
+const FilmCardComponent: React.FC<FilmCardProps> = ({ film }) => {
+  const { backgroundImage, name, genre, released, id, posterImage, isFavorite } = film;
+
   return (
     <section className="film-card">
       <div className="film-card__bg">
-        <img src={promo.backgroundImage} alt={promo.name} />
+        <img src={backgroundImage} alt={name} data-testid="film-background-image" />
       </div>
 
-      <h1 className="visually-hidden">{LOCALE.TITLE}</h1>
-
-      <header className="page-header film-card__head">
-        <Logo />
-        <UserBlock />
-      </header>
+      <Header className="film-card__head" />
 
       <div className="film-card__wrap">
         <div className="film-card__info">
-          <div className="film-card__poster">
-            <img src={promo.posterImage} alt={promo.name} width="218" height="327" />
-          </div>
+          <Poster src={posterImage} alt={name} width={PosterSize.WIDTH} height={PosterSize.HEIGHT} />
 
           <div className="film-card__desc">
-            <h2 className="film-card__title">{promo.name}</h2>
+            <h2 className="film-card__title">{name}</h2>
             <p className="film-card__meta">
-              <span className="film-card__genre">{promo.genre}</span>
-              <span className="film-card__year">{promo.released}</span>
+              <span className="film-card__genre">{genre}</span>
+              <span className="film-card__year">{released}</span>
             </p>
 
-            <Buttons id={promo.id} />
+            <FilmCardButtons filmId={id} isFavorite={isFavorite} />
           </div>
         </div>
       </div>
@@ -52,4 +43,4 @@ const FilmCard: React.FC = () => {
   );
 };
 
-export default FilmCard;
+export const FilmCard = React.memo(FilmCardComponent);

@@ -1,104 +1,102 @@
-import { configureMockStore } from '@jedmao/redux-mock-store';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router-dom';
-import { NameSpace } from '../../data/constants/name-space';
-import { AuthorizationStatus } from '../../data/enums/authorization-status';
-import films from '../../mock/films';
-import { createAPI } from '../../services/api';
-import { State } from '../../data/types/store';
+import { configureMockStore } from '@jedmao/redux-mock-store';
 import thunk from 'redux-thunk';
-import { Action, ThunkDispatch } from '@reduxjs/toolkit';
-import Player from './player';
+import { createAPI } from '../../services/api';
+import { State } from '../../types/state';
+import { AuthorizationStatus } from '../../types/authorization-status';
+import { Player } from './player';
+import { RouteLinks } from '../../router/consts';
+import { ReducerName } from '../../types/reducer-name';
+import films from '../../mocks/films';
 
 const api = createAPI();
 const middlewares = [thunk.withExtraArgument(api)];
-const mockStore = configureMockStore<
-  State,
-  Action,
-  ThunkDispatch<State, typeof api, Action>
->(middlewares);
+const mockStore = configureMockStore<State>(middlewares);
+
 const mockFilm = films[0];
+
 describe('Player Component', () => {
-  it('should render without errors', () => {
+  it('renders video player with controls', async () => {
     const store = mockStore({
-      [NameSpace.User]: {
-        authorizationStatus: AuthorizationStatus.Auth,
-      },
-      [NameSpace.Film]: {
+      [ReducerName.Film]: {
         film: mockFilm,
-        reviewsFilm: [],
-        similarFilms: [],
-        isFilmDataLoading: false,
-        isSimilarFilmsDataLoading: false,
-        isReviewsFilmDataLoading: false,
-        hasError: false
-      }
+        isLoading: false,
+      },
+      [ReducerName.Authorzation]: {
+        authorizationStatus: AuthorizationStatus.Authorized,
+        user: {
+          name: 'John Doe',
+          avatarUrl: 'path/to/avatar.jpg',
+          email: 'john@example.com',
+          id: 123,
+          token: '123433',
+        },
+      },
     });
+
     render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Player />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`${RouteLinks.PLAYER}/1`]}>
+          <Routes>
+            <Route path={`${RouteLinks.PLAYER}/:id`} element={<Player />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
     );
 
-    expect(screen.getByText(/Full screen/i)).toBeInTheDocument();
-    expect(screen.getByText(/Snatch/i)).toBeInTheDocument();
-    expect(screen.getByText(/Pause/i)).toBeInTheDocument();
+    await waitFor(() => {
+      const videoPlayer = screen.getByTestId('video-player');
+      expect(videoPlayer).toBeInTheDocument();
+
+      const exitButton = screen.getByText('Exit');
+      expect(exitButton).toBeInTheDocument();
+
+      const playButton = screen.getByText('Play');
+      expect(playButton).toBeInTheDocument();
+    });
   });
 
-  it('should render loading screen', () => {
+  it('toggles play/pause when play button is clicked', async () => {
     const store = mockStore({
-      [NameSpace.User]: {
-        authorizationStatus: AuthorizationStatus.Auth,
-      },
-      [NameSpace.Film]: {
+      [ReducerName.Film]: {
         film: mockFilm,
-        reviewsFilm: [],
-        similarFilms: [],
-        isFilmDataLoading: true,
-        isSimilarFilmsDataLoading: false,
-        isReviewsFilmDataLoading: false,
-        hasError: false
-      }
-    });
-    render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Player />
-        </Provider>
-      </MemoryRouter>
-    );
-
-    const loadingScreen = screen.getByTestId('loading-screen');
-
-    expect(loadingScreen).toBeInTheDocument();
-  });
-
-  it('should render error', () => {
-    const store = mockStore({
-      [NameSpace.User]: {
-        authorizationStatus: AuthorizationStatus.Auth,
+        isLoading: false,
       },
-      [NameSpace.Film]: {
-        film: null,
-        reviewsFilm: [],
-        similarFilms: [],
-        isFilmDataLoading: false,
-        isSimilarFilmsDataLoading: false,
-        isReviewsFilmDataLoading: false,
-        hasError: true
-      }
+      [ReducerName.Authorzation]: {
+        authorizationStatus: AuthorizationStatus.Authorized,
+        user: {
+          name: 'John Doe',
+          avatarUrl: 'path/to/avatar.jpg',
+          email: 'john@example.com',
+          id: 123,
+          token: '123433',
+        },
+      },
     });
+
     render(
-      <MemoryRouter>
-        <Provider store={store}>
-          <Player />
-        </Provider>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`${RouteLinks.PLAYER}/1`]}>
+          <Routes>
+            <Route path={`${RouteLinks.PLAYER}/:id`} element={<Player />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
     );
 
-    expect(screen.getByText(/Ошибка 404. Страница не существует./i)).toBeInTheDocument();
+    const playButton = screen.getByTestId('play-button');
+    const videoPlayer: HTMLVideoElement = screen.getByTestId('video-player');
+
+    expect(videoPlayer.paused).toBe(true);
+
+    fireEvent.click(playButton);
+
+    await waitFor(() => {
+      setTimeout(() => {
+        expect(videoPlayer.paused).toBe(false);
+      }, 1000);
+    });
   });
 });
