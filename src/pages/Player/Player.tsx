@@ -1,56 +1,81 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useLayoutEffect, useRef } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import Page404 from '../page404';
 import LOCALE from './player.locale';
-import { useAppSelector } from '../../hooks/hooks';
-import { getFilm } from '../../store/film/film.selectors';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
+import { getFilm, getFilmDataLoadingStatus, getFilmErrorStatus } from '../../store/film/film.selectors';
+import { fetchFilmAction, fetchSimilarFilm, fetchReviewsFilm } from '../../store/api-action';
+import { resetFilm } from '../../store/film/film.slices';
+import LoadingSreen from '../loading-sreen';
+import useVideoPlayer from '../../hooks/use-video-player';
+import Progress from './progress';
+import PlayerButtons from './player-buttons';
 
 const Player: React.FC = () => {
-  // const params = useParams();
-  //потом поменять
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const sliderRef = useRef<HTMLDivElement | null>(null);
+  const params = useParams();
+  const dispatch = useAppDispatch();
   const film = useAppSelector(getFilm);
-  if (film === undefined || film === null) {
+  const hasError = useAppSelector(getFilmErrorStatus);
+  const isFilmDataLoading = useAppSelector(getFilmDataLoadingStatus);
+  const {
+    isPlaying,
+    progress,
+    togglePlay,
+    handleProgress,
+    handleSlider,
+    handleFullSrceen
+  } = useVideoPlayer(videoRef, sliderRef);
+
+  useLayoutEffect(() => {
+    if (params.id) {
+      dispatch(fetchFilmAction({ filmId: params.id }));
+      dispatch(fetchSimilarFilm({ filmId: params.id }));
+      dispatch(fetchReviewsFilm({ filmId: params.id }));
+    }
+    return () => {
+      dispatch(resetFilm());
+    };
+  }, [params.id, dispatch]);
+
+  if (isFilmDataLoading) {
+    return <LoadingSreen />;
+  }
+
+  if (hasError || film === null) {
     return <Page404 />;
   }
+
   return (
     <div className="player">
       <video
-        src={film?.videoLink}
+        src={film.videoLink}
         className="player__video"
-        poster={film?.posterImage}
+        poster={film.backgroundImage}
+        ref={videoRef}
+        autoPlay
+        onTimeUpdate={handleProgress}
       />
+
       <Link type='button' className="player__exit" to={`/films/${film.id}`}>
         {LOCALE.EXIT}
       </Link>
+
       <div className="player__controls">
-        <div className="player__controls-row">
-          <div className="player__time">
-            <progress className="player__progress" value="30" max="100" />
-            <div className="player__toggler" style={{ left: '30%' }}>
-              {LOCALE.TOGGLER}
-            </div>
-          </div>
-          <div className="player__time-value">
-            {film.runTime}
-          </div>
-        </div>
+        <Progress
+          handleSlider={handleSlider}
+          progress={progress}
+          runTime={film.runTime * (100 - progress) / 100}
+          sliderRef={sliderRef}
+        />
 
-        <div className="player__controls-row">
-          <button type="button" className="player__play">
-            <svg viewBox="0 0 19 19" width="19" height="19">
-              <use xlinkHref="#play-s"></use>
-            </svg>
-            <span>{LOCALE.PLAY}</span>
-          </button>
-          <div className="player__name">Transpotting</div>
-
-          <button type="button" className="player__full-screen">
-            <svg viewBox="0 0 27 27" width="27" height="27">
-              <use xlinkHref="#full-screen"></use>
-            </svg>
-            <span>Full screen</span>
-          </button>
-        </div>
+        <PlayerButtons
+          togglePlay={togglePlay}
+          handleFullSrceen={handleFullSrceen}
+          isPlaying={isPlaying}
+          name={film.name}
+        />
       </div>
     </div>
   );

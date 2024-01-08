@@ -81,7 +81,7 @@ const Film: React.FC = () => {
 
               <div className="film-card__buttons">
                 <Buttons.Play id={film.id} />
-                <Buttons.FilmCard count={9} />
+                <Buttons.FilmCard id={film.id} />
                 {isAuth ? <Buttons.AddReview id={film.id} /> : null}
               </div>
             </div>

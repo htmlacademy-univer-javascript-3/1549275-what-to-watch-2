@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Routes,
   Route
@@ -8,15 +8,27 @@ import PrivateRoute from './private-router';
 import { AppRoute } from '../../data/enums/app-route';
 import HistoryRouter from './history-router';
 import browserHistory from '../../utils/browser-history';
-import { useAppSelector } from '../../hooks/hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { AuthorizationStatus } from '../../data/enums/authorization-status';
 import LoadingScreen from '../../pages/loading-sreen';
-import { getAuthorizationStatus } from '../../store/user/user.selectors';
+import { getAuthCheckedStatus, getAuthorizationStatus } from '../../store/user/user.selectors';
+import { fetchFavoriteFilms } from '../../store/api-action';
+import { resetFavoriteFilms } from '../../store/favorite/favorite.slices';
 
 const { Main, Page404, Login, MyList, Player, AddReview, Film } = Pages;
 
 const AppRouter: React.FC = () => {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const dispatch = useAppDispatch();
+  const isAuth = useAppSelector(getAuthCheckedStatus);
+
+  useEffect(() => {
+    if (isAuth) {
+      dispatch(fetchFavoriteFilms());
+    } else {
+      dispatch(resetFavoriteFilms());
+    }
+  }, [isAuth, dispatch]);
 
   if (authorizationStatus === AuthorizationStatus.Unknown) {
     return <LoadingScreen />;

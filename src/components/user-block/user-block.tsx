@@ -5,6 +5,7 @@ import { AppRoute } from '../../data/enums/app-route';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { logoutAction } from '../../store/api-action';
 import { getAuthCheckedStatus } from '../../store/user/user.selectors';
+import { resetFavoriteFilms } from '../../store/favorite/favorite.slices';
 
 const UserBlock: React.FC = () => {
   const isAuth = useAppSelector(getAuthCheckedStatus);
@@ -25,6 +26,7 @@ const UserBlock: React.FC = () => {
           onClick={(evt) => {
             evt.preventDefault();
             dispatch(logoutAction());
+            dispatch(resetFavoriteFilms());
           }}
         >
           {LOCALE.OUT}

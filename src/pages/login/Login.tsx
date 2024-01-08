@@ -2,15 +2,14 @@ import React, { FormEvent, useRef } from 'react';
 import Footer from '../../components/footer/footer';
 import Logo from '../../components/logo';
 import LOCALE from './login.locale';
-import { useAppDispatch } from '../../hooks/hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { loginAction } from '../../store/api-action';
-
-const isError = false;
-const isValid = false;
+import { getAuthHasError } from '../../store/user/user.selectors';
 
 const Login: React.FC = () => {
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
+  const hasError = useAppSelector(getAuthHasError);
 
   const dispatch = useAppDispatch();
 
@@ -22,6 +21,7 @@ const Login: React.FC = () => {
         login: loginRef.current.value,
         password: passwordRef.current.value
       }));
+
     }
   };
 
@@ -34,24 +34,20 @@ const Login: React.FC = () => {
         </h1>
       </header>
 
+      {hasError ?
+        <div className="sign-in__message">
+          <p>{LOCALE.ERROR}</p>
+        </div>
+        : null}
+
       <div className="sign-in user-page__content">
         <form
           action=""
           className="sign-in__form"
           onSubmit={handleSubmit}
         >
-          {isError ?
-            <div className="sign-in__message">
-              <p>{LOCALE.ERROR}</p>
-            </div>
-            : null}
-          {isValid ?
-            <div className="sign-in__message">
-              <p>{LOCALE.VALID}</p>
-            </div>
-            : null}
           <div className="sign-in__fields">
-            <div className={`sign-in__field ${isValid ? 'sign-in__field--error' : ''}`}>
+            <div className="sign-in__field">
               <input
                 ref={loginRef}
                 className="sign-in__input"
@@ -90,10 +86,10 @@ const Login: React.FC = () => {
             </button>
           </div>
         </form>
-      </div>
+      </div >
 
       <Footer />
-    </div>
+    </div >
   );
 };
 
