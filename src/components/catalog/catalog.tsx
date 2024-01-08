@@ -1,68 +1,50 @@
-import React, { useCallback, useEffect } from 'react';
-import LOCALE from './catalog.locale';
-import GenresItem from './genres-item';
-import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import Catalog from '../../data/enums/catalog';
-import Buttons from '../buttons';
-import FilmList from '../film-list';
-import GENRES from '../../data/constants/genres';
-import { getAllFilmCount, getFilmCount, getFilms, getFilmsDataLoadingStatus, getGenre } from '../../store/films/films.selectors';
-import { getFilmsByGenre, getMoreFilms, resetFilmsCount, setGenre } from '../../store/films/films.slices';
-import LoadingSreen from '../../pages/loading-sreen';
+import React, { useCallback, useState } from 'react';
+import { GenreList } from './components/genre-list';
+import { FilmsList } from './components/films-list';
+import { Button } from '../button';
+import { useAppSelector } from '../../hooks/store';
+import { ReducerName } from '../../types/reducer-name';
+import { Film } from '../../types/film';
 
-const FilmCatalog: React.FC = () => {
-  const genre = useAppSelector(getGenre);
-  const filmList = useAppSelector(getFilms);
-  const allFilmCount = useAppSelector(getAllFilmCount);
-  const filmCount = useAppSelector(getFilmCount);
-  const dataLoadingStatus = useAppSelector(getFilmsDataLoadingStatus);
-  const dispatch = useAppDispatch();
+const DEFAULT_LIST_LENGTH = 8;
 
-  const handleSetGenre = useCallback((newGenre: Catalog) => {
-    dispatch(setGenre({ genre: newGenre }));
-  }, [dispatch]);
+interface CatalogProps {
+  withoutGenre?: boolean;
+  withoutButton?: boolean;
+  listLength?: number;
+  films?: Film[];
+}
 
-  const handleShowMore = () => {
-    dispatch(getMoreFilms());
-    dispatch(getFilmsByGenre());
-  };
+const CatalogComponent: React.FC<CatalogProps> = ({
+  withoutGenre = false,
+  withoutButton = false,
+  listLength,
+  films,
+}) => {
+  const stateGenreFilms = useAppSelector((state) => state[ReducerName.Main].genreFilms);
+  const [maxLength, setMaxLength] = useState(listLength || DEFAULT_LIST_LENGTH);
 
-  useEffect(() => {
-    if (!dataLoadingStatus) {
-      dispatch(resetFilmsCount());
-      dispatch(getFilmsByGenre());
-    }
-  }, [genre, dispatch, dataLoadingStatus]);
+  const handleClick = useCallback(()=>{
+    setMaxLength((prev) => prev + DEFAULT_LIST_LENGTH);
+  },[]);
 
-  if (dataLoadingStatus) {
-    return <LoadingSreen />;
-  }
+  const showButton = !withoutButton && stateGenreFilms.length >= maxLength;
 
   return (
     <section className="catalog">
-      <h2 className="catalog__title visually-hidden">
-        {LOCALE.TITLE}
-      </h2>
+      <h2 className="catalog__title visually-hidden">Catalog</h2>
 
-      <ul className="catalog__genres-list">
-        {GENRES.map((catalog) => (
-          <GenresItem
-            handleSetGenre={handleSetGenre}
-            isActive={catalog.title === genre}
-            title={catalog.title}
-            key={catalog.title}
-          />
-        ))}
-      </ul>
+      {!withoutGenre ? <GenreList /> : null}
 
-      <FilmList filmList={filmList} />
+      <FilmsList maxLength={maxLength} films={films} />
 
-      {allFilmCount > filmCount ?
-        <Buttons.ShowMore handleClick={handleShowMore} />
-        : null}
-
+      {showButton ? (
+        <div className="catalog__more">
+          <Button label="Show more" className="catalog__button" type="button" onClick={handleClick}/>
+        </div>
+      ) : null}
     </section>
   );
 };
 
-export default FilmCatalog;
+export const Catalog = React.memo(CatalogComponent);

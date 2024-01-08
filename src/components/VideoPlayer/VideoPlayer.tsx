@@ -1,13 +1,31 @@
+import React, { useEffect, useRef } from 'react';
 
-type VideoPlayerProps = {
-    videoLink: string;
-    posterImage: string;
+interface VideoPlayerProps {
+  src: string;
+  poster: string;
 }
 
-const VideoPlayer = ({videoLink, posterImage}: VideoPlayerProps) => (
-  <video className={'player__video'} src={videoLink} poster={posterImage} autoPlay muted playsInline>
-  </video>
-);
+const VideoPlayerComponent: React.FC<VideoPlayerProps> = ({ src, poster }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-export default VideoPlayer;
+  useEffect(() => {
+    let isMounted = true;
 
+    if (isMounted) {
+      setTimeout(() => {
+        videoRef.current?.play();
+      }, 1000);
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+
+  return (
+    <video data-testid="video-player" ref={videoRef} src={src} poster={poster} className="player__video" loop muted>
+      <source src={src} type="video/mp4" />
+    </video>
+  );
+};
+export const VideoPlayer = React.memo(VideoPlayerComponent);

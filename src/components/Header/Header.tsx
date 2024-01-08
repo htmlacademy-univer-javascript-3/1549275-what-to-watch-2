@@ -1,69 +1,84 @@
-import { AppRoute, AuthStatus, HeaderStyleType } from '../../config/config.ts';
-import { Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { logoutAction } from '../../store/apiActions.ts';
-// Поменять ссылку на Link
+import React, { useCallback, useMemo } from 'react';
+import { Logo } from '../logo';
+import { Link, useNavigate } from 'react-router-dom';
+import { RouteLinks } from '../../router/consts';
+import { useAppDispatch, useAppSelector } from '../../hooks/store';
+import { ReducerName } from '../../types/reducer-name';
+import { AuthorizationStatus } from '../../types/authorization-status';
+import { logout } from '../../store/api-actions';
+import { HeaderImageStyles } from '../../types/image';
 
-type HeaderProps = {
-  headerStyleType?: HeaderStyleType;
-  children?: JSX.Element | JSX.Element[];
+interface HeaderProps {
+  children?: React.ReactNode;
+  className?: string;
+  isLoginPage?: boolean;
 }
 
-const Header = ({headerStyleType, children}: HeaderProps):JSX.Element => {
-  const {avatarUrl} = useAppSelector((state) => state.user);
-  const authorizationStatus = useAppSelector((state) => state.authStatus);
+const HeaderComponent: React.FC<HeaderProps> = ({
+  children,
+  className = '',
+  isLoginPage = false,
+}) => {
+  const navigate = useNavigate();
+  const authorizationStatus = useAppSelector(
+    (state) => state[ReducerName.Authorzation].authorizationStatus
+  );
+  const user = useAppSelector((state) => state[ReducerName.Authorzation].user);
+
+  const hasAccess = authorizationStatus === AuthorizationStatus.Authorized;
+
   const dispatch = useAppDispatch();
-  return (
-    <header className={`page-header ${headerStyleType || ''}`}>
-      <div className="logo">
+
+  const handleClick = useCallback(() => {
+    dispatch(logout());
+    navigate(RouteLinks.MAIN);
+  }, [dispatch, navigate]);
+
+  const loginLogoutButton = useMemo(
+    () =>
+      hasAccess ? (
         <Link
-          to={AppRoute.Main}
-          className="logo__link"
+          to={RouteLinks.MAIN}
+          onClick={handleClick}
+          className="user-block__link"
         >
-          <span className="logo__letter logo__letter--1">W</span>
-          <span className="logo__letter logo__letter--2">T</span>
-          <span className="logo__letter logo__letter--3">W</span>
+          Sign out
         </Link>
-      </div>
+      ) : (
+        <Link to={RouteLinks.LOGIN} className="user-block__link">
+          Sign in
+        </Link>
+      ),
+    [handleClick, hasAccess]
+  );
+
+  return (
+    <header className={`page-header ${className}`}>
+      <Logo />
+
       {children}
-      {
-        authorizationStatus === AuthStatus.Auth ?
-          (
-            <ul className="user-block">
-              <li className="user-block__item">
+
+      {!isLoginPage && (
+        <ul className="user-block">
+          {hasAccess && (
+            <li className="user-block__item">
+              <Link to={RouteLinks.MY_LIST}>
                 <div className="user-block__avatar">
                   <img
-                    src={avatarUrl}
-                    alt="User avatar"
-                    width="63"
-                    height="63"
+                    src={user?.avatarUrl}
+                    alt={user?.name}
+                    width={HeaderImageStyles.Widht}
+                    height={HeaderImageStyles.Height}
                   />
                 </div>
-              </li>
-              <li className="user-block__item">
-                <a
-                  href=""
-                  className="user-block__link"
-                  onClick={(evt) => {
-                    evt.preventDefault();
-                    dispatch(logoutAction());
-                  }}
-                >Sign out
-                </a>
-              </li>
-            </ul>
-          ) : (
-            <div className="user-block">
-              <Link
-                to={AppRoute.SignIn}
-                className="user-block__link"
-              >Sign in
               </Link>
-            </div>
-          )
-      }
+            </li>
+          )}
+          <li className="user-block__item">{loginLogoutButton}</li>
+        </ul>
+      )}
     </header>
   );
 };
 
-export default Header;
+export const Header = React.memo(HeaderComponent);
