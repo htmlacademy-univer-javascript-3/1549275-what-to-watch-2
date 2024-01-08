@@ -4,16 +4,16 @@ import { Link } from 'react-router-dom';
 import { AppRoute } from '../../data/enums/app-route';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { logoutAction } from '../../store/api-action';
-import { AuthorizationStatus } from '../../data/enums/authorization-status';
+import { getAuthCheckedStatus } from '../../store/user/user.selectors';
 
 const UserBlock: React.FC = () => {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const isAuth = useAppSelector(getAuthCheckedStatus);
   const dispatch = useAppDispatch();
 
-  return authorizationStatus === AuthorizationStatus.Auth ?
+  return isAuth ?
     <ul className="user-block">
       <li className="user-block__item">
-        <Link to={AppRoute.MyList}>
+        <Link to={`/${AppRoute.MyList}`}>
           <div className="user-block__avatar">
             <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
           </div>

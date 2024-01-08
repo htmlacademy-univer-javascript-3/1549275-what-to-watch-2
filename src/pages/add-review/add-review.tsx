@@ -1,15 +1,14 @@
-import React, { useLayoutEffect, useState } from 'react';
-import Logo from '../../components/logo';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import Page404 from '../page404';
 import { useNavigate, useParams } from 'react-router-dom';
-import Breadcrumbs from './breadcrumbs';
-import UserBlock from '../../components/user-block';
 import RatingInput from '../../components/input/rating-stars';
 import LOCALE from './add-rewiew.locale';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { resetFilm } from '../../store/action';
-import { addReview, fetchFilm } from '../../store/api-action';
+import { addReview, fetchFilmAction } from '../../store/api-action';
 import LoadingSreen from '../loading-sreen';
+import Header from './header';
+import { getFilm, getFilmDataLoadingStatus, getFilmErrorStatus } from '../../store/film/film.selectors';
+import { resetFilm } from '../../store/film/film.slices';
 
 const initFormValue = {
   rating: null,
@@ -28,23 +27,24 @@ const AddReview: React.FC = () => {
   const params = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const film = useAppSelector((state) => state.film);
-  const isFilmDataLoading = useAppSelector((state) => state.isFilmDataLoading);
+  const film = useAppSelector(getFilm);
+  const isFilmDataLoading = useAppSelector(getFilmDataLoadingStatus);
+  const hasError = useAppSelector(getFilmErrorStatus);
   const [formValue, setFormValue] = useState<FormValueType>(initFormValue);
 
   useLayoutEffect(() => {
     if (params.id) {
-      dispatch(fetchFilm({ filmId: params.id }));
+      dispatch(fetchFilmAction({ filmId: params.id }));
     }
     return () => {
       dispatch(resetFilm());
     };
   }, [params.id, dispatch]);
 
-  const onClickRating = (event?: React.ChangeEvent<HTMLInputElement>) => {
+  const onClickRating = useCallback((event?: React.ChangeEvent<HTMLInputElement>) => {
     const rating = event?.target.value ? Number(event?.target.value) : null;
     setFormValue((prev) => ({ ...prev, rating }));
-  };
+  }, []);
 
   const onChangeText = (event?: React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormValue((prev) => ({ ...prev, text: event?.target.value ?? '' }));
@@ -69,34 +69,13 @@ const AddReview: React.FC = () => {
     return <LoadingSreen />;
   }
 
-  if (film === null) {
+  if (hasError || film === null) {
     return <Page404 />;
   }
 
   return (
     <section className="film-card film-card--full" style={{ background: film.backgroundColor }}>
-      <div className="film-card__header">
-        <div className="film-card__bg">
-          <img src={film.backgroundImage} alt={film.name} />
-        </div>
-
-        <h1 className="visually-hidden">WTW</h1>
-
-        <header className="page-header">
-          <Logo />
-          <Breadcrumbs film={film} />
-          <UserBlock />
-        </header>
-
-        <div className="film-card__poster film-card__poster--small">
-          <img
-            src={film.posterImage}
-            alt={film.name}
-            width="218"
-            height="327"
-          />
-        </div>
-      </div>
+      <Header film={film} />
 
       <div className="add-review">
         <form action="#" className="add-review__form">
@@ -106,7 +85,6 @@ const AddReview: React.FC = () => {
               selectedValue={formValue.rating}
             />
           </div>
-
           <div className="add-review__text">
             <textarea
               className="add-review__textarea"
@@ -126,7 +104,6 @@ const AddReview: React.FC = () => {
                 {LOCALE.POST}
               </button>
             </div>
-
           </div>
         </form>
       </div>

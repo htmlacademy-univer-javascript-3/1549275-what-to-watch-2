@@ -1,18 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import LOCALE from './add-rewiew.locale';
-import { IFilmAllInfo } from '../../data/abstractions/IFilmAllInfo';
 
 type BreadcrumbsProps = {
-  film: IFilmAllInfo;
+  name: string;
+  id: string;
 };
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ film }) => (
+const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ name, id }) => (
   <nav className="breadcrumbs">
     <ul className="breadcrumbs__list">
       <li className="breadcrumbs__item">
-        <Link to={`/films/${film.id}`} className="breadcrumbs__link">
-          {film.name}
+        <Link to={`/films/${id}`} className="breadcrumbs__link">
+          {name}
         </Link>
       </li>
       <li className="breadcrumbs__item">

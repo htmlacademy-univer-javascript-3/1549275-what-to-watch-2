@@ -1,33 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import LOCALE from './catalog.locale';
 import GenresItem from './genres-item';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { getFilmsByGenre, moreFilms, resetFilmCount, setGenre } from '../../store/action';
 import Catalog from '../../data/enums/catalog';
 import Buttons from '../buttons';
 import FilmList from '../film-list';
 import GENRES from '../../data/constants/genres';
+import { getAllFilmCount, getFilmCount, getFilms, getFilmsDataLoadingStatus, getGenre } from '../../store/films/films.selectors';
+import { getFilmsByGenre, getMoreFilms, resetFilmsCount, setGenre } from '../../store/films/films.slices';
+import LoadingSreen from '../../pages/loading-sreen';
 
 const FilmCatalog: React.FC = () => {
-  const genre = useAppSelector((state) => state.genre);
-  const filmList = useAppSelector((state) => state.films);
-  const allFilmCount = useAppSelector((state) => state.allFilmCount);
-  const filmCount = useAppSelector((state) => state.filmCount);
+  const genre = useAppSelector(getGenre);
+  const filmList = useAppSelector(getFilms);
+  const allFilmCount = useAppSelector(getAllFilmCount);
+  const filmCount = useAppSelector(getFilmCount);
+  const dataLoadingStatus = useAppSelector(getFilmsDataLoadingStatus);
   const dispatch = useAppDispatch();
 
-  const handleSetGenre = (newGenre: Catalog) => {
+  const handleSetGenre = useCallback((newGenre: Catalog) => {
     dispatch(setGenre({ genre: newGenre }));
-  };
+  }, [dispatch]);
 
   const handleShowMore = () => {
-    dispatch(moreFilms());
+    dispatch(getMoreFilms());
     dispatch(getFilmsByGenre());
   };
 
   useEffect(() => {
-    dispatch(resetFilmCount());
-    dispatch(getFilmsByGenre());
-  }, [genre, dispatch]);
+    if (!dataLoadingStatus) {
+      dispatch(resetFilmsCount());
+      dispatch(getFilmsByGenre());
+    }
+  }, [genre, dispatch, dataLoadingStatus]);
+
+  if (dataLoadingStatus) {
+    return <LoadingSreen />;
+  }
 
   return (
     <section className="catalog">

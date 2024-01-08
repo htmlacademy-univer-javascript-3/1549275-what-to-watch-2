@@ -4,31 +4,35 @@ import UserBlock from '../../components/user-block/user-block';
 import Page404 from '../page404';
 import { useParams } from 'react-router-dom';
 import Buttons from '../../components/buttons';
-import Tabs, { Tab } from '../../components/tabs/tabs';
-import Overview from './overview';
-import Details from './details';
-import Reviews from './reviews';
 import LikeThis from './like-this';
-import { FILM_TABS } from '../../data/constants/film-tab';
 import LOCALE from './film.locale';
-import { fetchFilm, fetchReviewsFilm, fetchSimilarFilm } from '../../store/api-action';
+import { fetchFilmAction, fetchReviewsFilm, fetchSimilarFilm } from '../../store/api-action';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { resetFilm } from '../../store/action';
 import LoadingSreen from '../loading-sreen';
-import { AuthorizationStatus } from '../../data/enums/authorization-status';
+import FilmInfo from './film-info';
+import {
+  getFilm,
+  getFilmDataLoadingStatus,
+  getFilmErrorStatus,
+  getReviewsFilm,
+  getSimilarFilms
+} from '../../store/film/film.selectors';
+import { getAuthCheckedStatus } from '../../store/user/user.selectors';
+import { resetFilm } from '../../store/film/film.slices';
 
 const Film: React.FC = () => {
   const params = useParams();
   const dispatch = useAppDispatch();
-  const film = useAppSelector((state) => state.film);
-  const reviewsFilm = useAppSelector((state) => state.reviewsFilm);
-  const similarFilms = useAppSelector((state) => state.similarFilms);
-  const isFilmDataLoading = useAppSelector((state) => state.isFilmDataLoading);
-  const isAuth = useAppSelector((state) => state.authorizationStatus === AuthorizationStatus.Auth);
+  const film = useAppSelector(getFilm);
+  const reviewsFilm = useAppSelector(getReviewsFilm);
+  const similarFilms = useAppSelector(getSimilarFilms);
+  const hasError = useAppSelector(getFilmErrorStatus);
+  const isFilmDataLoading = useAppSelector(getFilmDataLoadingStatus);
+  const isAuth = useAppSelector(getAuthCheckedStatus);
 
   useLayoutEffect(() => {
     if (params.id) {
-      dispatch(fetchFilm({ filmId: params.id }));
+      dispatch(fetchFilmAction({ filmId: params.id }));
       dispatch(fetchSimilarFilm({ filmId: params.id }));
       dispatch(fetchReviewsFilm({ filmId: params.id }));
     }
@@ -41,7 +45,7 @@ const Film: React.FC = () => {
     return <LoadingSreen />;
   }
 
-  if (film === null) {
+  if (hasError || film === null) {
     return <Page404 />;
   }
 
@@ -84,31 +88,7 @@ const Film: React.FC = () => {
           </div>
         </div>
 
-        <div className="film-card__wrap film-card__translate-top">
-          <div className="film-card__info">
-            <div className="film-card__poster film-card__poster--big">
-              <img
-                src={film.posterImage}
-                alt={film.name}
-                width="218"
-                height="327"
-              />
-            </div>
-            <div className="film-card__desc">
-              <Tabs defaultActiveKey='1' items={FILM_TABS}>
-                <Tab key='1'>
-                  <Overview {...film} />
-                </Tab>
-                <Tab key='2'>
-                  <Details {...film} />
-                </Tab>
-                <Tab key='3'>
-                  <Reviews reviews={reviewsFilm} />
-                </Tab>
-              </Tabs>
-            </div>
-          </div>
-        </div>
+        <FilmInfo film={film} reviewsFilm={reviewsFilm} />
       </section>
       {similarFilms.length !== 0 ? <LikeThis similarFilms={similarFilms} backgroundColor={film.backgroundColor} /> : null}
     </>
