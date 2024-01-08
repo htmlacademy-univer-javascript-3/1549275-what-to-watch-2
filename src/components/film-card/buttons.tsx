@@ -5,7 +5,7 @@ import Buttons from '../buttons';
 const FilmCardButtons: React.FC<{ id: string }> = ({ id }) => (
   <div className="film-card__buttons">
     <Buttons.Play id={id} />
-    <Buttons.FilmCard count={9} />
+    <Buttons.FilmCard id={id} />
   </div>
 );
 

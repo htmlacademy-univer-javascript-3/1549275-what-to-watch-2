@@ -18,7 +18,9 @@ import {
   getSimilarFilms,
   getReviewsFilm,
   getPromo,
-  login
+  login,
+  getFavorite,
+  changeStatus
 } from '../services/endpoints';
 
 export const fetchFilmsAction = createAsyncThunk<
@@ -152,3 +154,32 @@ export const addReview = createAsyncThunk<
 >('/comments/id', async ({ comment, rating, filmId }, { extra: api }) => {
   await api.post(`/comments/${filmId}`, { comment, rating });
 });
+
+export const fetchFavoriteFilms = createAsyncThunk<
+IFilmData[],
+undefined,
+{
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'favorite/loadData',
+  async (_arg, { extra: api}) => {
+    const { data } = await api.get<IFilmData[]>(getFavorite());
+    return data;
+  },
+);
+
+export const changeStatusFilms = createAsyncThunk<
+void,
+{filmId: string; status: 0 | 1},
+{
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'favorite/changeStatus',
+  async ({filmId, status}, { extra: api}) => {
+    await api.post(changeStatus(filmId, status));
+  },
+);

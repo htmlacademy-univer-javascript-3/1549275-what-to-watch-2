@@ -4,3 +4,4 @@ import { State } from '../../data/types/store';
 
 export const getAuthorizationStatus = (state: State): AuthorizationStatus => state[NameSpace.User].authorizationStatus;
 export const getAuthCheckedStatus = (state: State): boolean => state[NameSpace.User].authorizationStatus === AuthorizationStatus.Auth;
+export const getAuthHasError = (state: State): boolean => state[NameSpace.User].hasError;

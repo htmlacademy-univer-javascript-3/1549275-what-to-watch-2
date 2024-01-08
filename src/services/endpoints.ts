@@ -14,3 +14,7 @@ export const getSimilarFilms = (id: string) => `/films/${id}/similar`;
 
 export const getReviewsFilm = (id: string) => `/comments/${id}`;
 
+export const getFavorite = () => '/favorite';
+
+export const changeStatus = (filmId: string, status: 0|1) => `/favorite/${filmId}/${status}`;
+

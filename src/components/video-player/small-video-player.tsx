@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import useSmallVideoPlayer from './useSmallVideoPlayer';
+import useSmallVideoPlayer from '../../hooks/use-small-video-player';
 import { IFilmData } from '../../data/abstractions/IFilmData';
 
 const SmallVideoPlayer: React.FC<IFilmData & { isMuted?: boolean }> = ({

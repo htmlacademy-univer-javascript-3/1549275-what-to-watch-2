@@ -2,5 +2,6 @@ export enum NameSpace {
   Films = 'FILMS',
   Film = 'FILM',
   User = 'USER',
-  Promo = 'PROMO'
+  Promo = 'PROMO',
+  Favorite = 'FAVORITE'
 }
