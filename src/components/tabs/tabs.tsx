@@ -1,32 +1,14 @@
-import React, { Fragment, useState } from 'react';
-import { ItemType, TabProps, TabsProps } from './tabs.types';
+import React, { Fragment, useCallback, useState } from 'react';
+import { TabProps, TabsProps } from './tabs.types';
+import Item from './item';
 
 export const Tab: React.FC<TabProps> = ({ children }) => (<Fragment key={children.key}>{children}</Fragment>);
-
-const Item: React.FC<ItemType & { activeKey: string; onClick: (key: string) => void }> = ({
-  label,
-  option,
-  activeKey,
-  onClick
-}) => (
-  <li className={`film-nav__item ${activeKey === option ? 'film-nav__item--active' : ''}`}>
-    <div
-      className="film-nav__link"
-      key={option}
-      onClick={() => {
-        onClick(option);
-      }}
-    >
-      {label}
-    </div>
-  </li>
-);
 
 const Tabs: React.FunctionComponent<TabsProps> = ({
   items, defaultActiveKey, children
 }) => {
   const [activeKey, setTabActiveKey] = useState<string>(defaultActiveKey ?? items[0].option);
-  const handleClick = (key: string) => setTabActiveKey(key);
+  const handleClick = useCallback((key: string) => setTabActiveKey(key), []);
 
   return (
     <div className="film-card__desc">

@@ -5,11 +5,18 @@ import UserBlock from '../user-block/user-block';
 import Buttons from './buttons';
 import { useAppSelector } from '../../hooks/hooks';
 import LoadingSreen from '../../pages/loading-sreen';
+import { getPromo, getPromoDataLoadingStatus, getPromoErrorStatus } from '../../store/promo/promo.selectors';
+import Page404 from '../../pages/page404';
 
 const FilmCard: React.FC = () => {
-  const promo = useAppSelector((state) => state.promo);
-  if (promo === null) {
+  const promo = useAppSelector(getPromo);
+  const dataLoadingStatus = useAppSelector(getPromoDataLoadingStatus);
+  const hasError = useAppSelector(getPromoErrorStatus);
+  if (dataLoadingStatus) {
     return <LoadingSreen />;
+  }
+  if (hasError || promo === null) {
+    return <Page404 />;
   }
   return (
     <section className="film-card">

@@ -4,10 +4,11 @@ import Logo from '../../components/logo';
 import UserBlock from '../../components/user-block';
 import FilmList from '../../components/film-list';
 import { useAppSelector } from '../../hooks/hooks';
+import { getFilms } from '../../store/films/films.selectors';
 
 const MyList: React.FC = () => {
   //потом поменять
-  const filmList = useAppSelector((state) => state.films);
+  const filmList = useAppSelector(getFilms);
   return (
     <div className="user-page">
       <header className="page-header user-page__head">

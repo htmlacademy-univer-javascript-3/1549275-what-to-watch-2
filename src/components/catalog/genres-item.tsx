@@ -18,4 +18,6 @@ const GenresItem: React.FC<GenresItemProps> = ({
   </li>
 );
 
-export default GenresItem;
+const GenresItemMemo = React.memo(GenresItem);
+
+export default GenresItemMemo;

@@ -1,3 +1,4 @@
+import React from 'react';
 import FilmCatalog from '../../components/catalog';
 import FilmCard from '../../components/film-card';
 import Footer from '../../components/footer';

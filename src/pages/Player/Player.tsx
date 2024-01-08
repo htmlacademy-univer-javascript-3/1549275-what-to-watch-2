@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import Page404 from '../page404';
 import LOCALE from './player.locale';
 import { useAppSelector } from '../../hooks/hooks';
+import { getFilm } from '../../store/film/film.selectors';
 
 const Player: React.FC = () => {
   // const params = useParams();
   //потом поменять
-  const film = useAppSelector((state) => state.film);
+  const film = useAppSelector(getFilm);
   if (film === undefined || film === null) {
     return <Page404 />;
   }

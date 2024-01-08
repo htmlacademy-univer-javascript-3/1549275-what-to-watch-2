@@ -11,18 +11,17 @@ import browserHistory from '../../utils/browser-history';
 import { useAppSelector } from '../../hooks/hooks';
 import { AuthorizationStatus } from '../../data/enums/authorization-status';
 import LoadingScreen from '../../pages/loading-sreen';
+import { getAuthorizationStatus } from '../../store/user/user.selectors';
 
 const { Main, Page404, Login, MyList, Player, AddReview, Film } = Pages;
 
 const AppRouter: React.FC = () => {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const isFilmsDataLoading = useAppSelector((state) => state.isFilmsDataLoading);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
-  if (authorizationStatus === AuthorizationStatus.Unknown || isFilmsDataLoading) {
-    return (
-      <LoadingScreen />
-    );
+  if (authorizationStatus === AuthorizationStatus.Unknown) {
+    return <LoadingScreen />;
   }
+
   return (
     <HistoryRouter history={browserHistory}>
       <Routes>

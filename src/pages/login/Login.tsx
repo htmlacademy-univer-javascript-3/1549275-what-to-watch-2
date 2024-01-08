@@ -5,7 +5,6 @@ import LOCALE from './login.locale';
 import { useAppDispatch } from '../../hooks/hooks';
 import { loginAction } from '../../store/api-action';
 
-
 const isError = false;
 const isValid = false;
 
