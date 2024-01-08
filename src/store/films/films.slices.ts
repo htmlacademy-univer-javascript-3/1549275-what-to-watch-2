@@ -6,7 +6,7 @@ import { NameSpace } from '../../data/constants/name-space';
 import genreDictionary from '../../utils/genre-dictionary';
 import { fetchFilmsAction } from '../api-action';
 
-type InitialState = {
+export type InitialState = {
   genre: Catalog;
   films: IFilmData[];
   allFilms: IFilmData[];
@@ -16,7 +16,7 @@ type InitialState = {
   hasError: boolean;
 }
 
-const initialState: InitialState = {
+export const initialState: InitialState = {
   genre: Catalog.All,
   films: [],
   allFilms: [],

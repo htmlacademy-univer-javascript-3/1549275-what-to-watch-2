@@ -3,12 +3,12 @@ import { AuthorizationStatus } from '../../data/enums/authorization-status';
 import { NameSpace } from '../../data/constants/name-space';
 import { checkAuthAction, loginAction, logoutAction } from '../api-action';
 
-type InitialState = {
+export type InitialState = {
   authorizationStatus: AuthorizationStatus;
   hasError: boolean;
 }
 
-const initialState: InitialState = {
+export const initialState: InitialState = {
   authorizationStatus: AuthorizationStatus.Unknown,
   hasError: false
 };

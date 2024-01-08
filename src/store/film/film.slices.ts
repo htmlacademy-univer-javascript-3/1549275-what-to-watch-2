@@ -5,7 +5,7 @@ import { IReview } from '../../data/abstractions/IReview';
 import { NameSpace } from '../../data/constants/name-space';
 import { fetchFilmAction, fetchReviewsFilm, fetchSimilarFilm } from '../api-action';
 
-type InitialState = {
+export type InitialState = {
   film: IFilmAllInfo | null;
   similarFilms: IFilmData[];
   reviewsFilm: IReview[];
@@ -15,7 +15,7 @@ type InitialState = {
   hasError: boolean;
 }
 
-const initialState: InitialState = {
+export const initialState: InitialState = {
   film: null,
   similarFilms: [],
   reviewsFilm: [],

@@ -40,7 +40,7 @@ const UserBlock: React.FC = () => {
           to='/login'
           className="user-block__link"
         >
-          Sign in
+          {LOCALE.IN}
         </Link>
       </li>
     </ul>;

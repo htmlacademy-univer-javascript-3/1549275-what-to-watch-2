@@ -3,12 +3,12 @@ import { IFilmData } from '../../data/abstractions/IFilmData';
 import { NameSpace } from '../../data/constants/name-space';
 import { fetchFavoriteFilms } from '../api-action';
 
-type InitialState = {
+export type InitialState = {
   favoriteFilms: IFilmData[];
   isFavoriteLoading: boolean;
 }
 
-const initialState: InitialState = {
+export const initialState: InitialState = {
   favoriteFilms: [],
   isFavoriteLoading: false
 };
