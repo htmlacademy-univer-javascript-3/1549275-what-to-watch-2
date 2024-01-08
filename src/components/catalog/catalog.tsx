@@ -57,7 +57,7 @@ const FilmCatalog: React.FC = () => {
 
       <FilmList filmList={filmList} />
 
-      {allFilmCount >= filmCount ?
+      {allFilmCount > filmCount ?
         <Buttons.ShowMore handleClick={handleShowMore} />
         : null}
 

@@ -81,7 +81,11 @@ const Login: React.FC = () => {
             </div>
           </div>
           <div className="sign-in__submit">
-            <button className="sign-in__btn" type="submit">
+            <button
+              className="sign-in__btn"
+              type="submit"
+              data-testid='sign-in__btn'
+            >
               {LOCALE.TITLE}
             </button>
           </div>

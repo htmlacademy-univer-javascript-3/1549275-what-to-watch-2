@@ -90,6 +90,7 @@ const AddReview: React.FC = () => {
               className="add-review__textarea"
               name="review-text"
               id="review-text"
+              data-testid="review-text"
               placeholder="Review text"
               onChange={onChangeText}
               value={formValue.text}

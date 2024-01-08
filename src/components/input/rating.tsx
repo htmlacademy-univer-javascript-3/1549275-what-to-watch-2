@@ -8,6 +8,7 @@ const Rating: React.FC<RatingProps> = ({
     <input
       className="rating__input"
       id={`star-${rating}`}
+      data-testid={`star-${rating}`}
       type="radio"
       name="rating"
       value={rating}

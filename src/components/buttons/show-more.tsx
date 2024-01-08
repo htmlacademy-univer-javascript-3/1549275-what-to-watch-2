@@ -11,10 +11,11 @@ const ShowMore: React.FC<ShowMoreProps> = ({ handleClick }) => (
       className="catalog__button"
       type="button"
       onClick={handleClick}
+      data-testid='show-more'
     >
       {LOCALE.SHOW_MORE}
     </button>
-  </div>
+  </div >
 );
 
 export default ShowMore;
