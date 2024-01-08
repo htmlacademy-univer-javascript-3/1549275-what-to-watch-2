@@ -6,8 +6,6 @@ import {
 import Pages from '../../pages';
 import PrivateRoute from './private-router';
 import { AppRoute } from '../../data/enums/app-route';
-import HistoryRouter from './history-router';
-import browserHistory from '../../utils/browser-history';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { AuthorizationStatus } from '../../data/enums/authorization-status';
 import LoadingScreen from '../../pages/loading-sreen';
@@ -35,34 +33,32 @@ const AppRouter: React.FC = () => {
   }
 
   return (
-    <HistoryRouter history={browserHistory}>
-      <Routes>
-        <Route path={AppRoute.Root} >
-          <Route index element={<Main />} />
-          <Route path={AppRoute.Login} element={<Login />} />
-          <Route path={AppRoute.MyList} element={
+    <Routes>
+      <Route path={AppRoute.Root} >
+        <Route index element={<Main />} />
+        <Route path={AppRoute.Login} element={<Login />} />
+        <Route path={AppRoute.MyList} element={
+          <PrivateRoute>
+            <MyList />
+          </PrivateRoute>
+        }
+        />
+        <Route path={AppRoute.Player} element={<Player />} />
+        <Route path={AppRoute.Films}>
+          <Route path=":id" element={<Film />} />
+          <Route path=":id/review" element={
             <PrivateRoute>
-              <MyList />
+              <AddReview />
             </PrivateRoute>
           }
           />
-          <Route path={AppRoute.Player} element={<Player />} />
-          <Route path={AppRoute.Films}>
-            <Route path=":id" element={<Film />} />
-            <Route path=":id/review" element={
-              <PrivateRoute>
-                <AddReview />
-              </PrivateRoute>
-            }
-            />
-          </Route>
         </Route>
-        <Route
-          path="*"
-          element={<Page404 />}
-        />
-      </Routes>
-    </HistoryRouter>
+      </Route>
+      <Route
+        path="*"
+        element={<Page404 />}
+      />
+    </Routes>
   );
 };
 

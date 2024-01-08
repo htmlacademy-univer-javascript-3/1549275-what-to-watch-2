@@ -3,13 +3,13 @@ import { NameSpace } from '../../data/constants/name-space';
 import { IFilmPromo } from '../../data/abstractions/IFilmPromo';
 import { fetchPromoAction } from '../api-action';
 
-type InitialState = {
+export type InitialState = {
   promo: IFilmPromo | null;
   isPromoDataLoading: boolean;
   hasError: boolean;
 }
 
-const initialState: InitialState = {
+export const initialState: InitialState = {
   promo: null,
   isPromoDataLoading: false,
   hasError: false

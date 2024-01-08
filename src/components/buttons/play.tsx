@@ -3,7 +3,7 @@ import LOCALE from './buttons.locale';
 import { Link } from 'react-router-dom';
 
 type PlayProps = {
-	id: string;
+  id: string;
 }
 
 const Play: React.FC<PlayProps> = ({ id }) => (
@@ -13,7 +13,6 @@ const Play: React.FC<PlayProps> = ({ id }) => (
     </svg>
     <span>{LOCALE.PLAY}</span>
   </Link>
-
 );
 
 export default Play;

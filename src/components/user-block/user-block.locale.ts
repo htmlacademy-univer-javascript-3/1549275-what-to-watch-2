@@ -1,3 +1,4 @@
 export default {
-  OUT: 'Sign out'
+  OUT: 'Sign out',
+  IN: 'Sign in'
 };
