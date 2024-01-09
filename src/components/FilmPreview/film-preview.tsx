@@ -1,7 +1,7 @@
-import { FilmPreviewData } from '../../types';
+import { FilmPreviewData } from '../../types/index.ts';
 import Header from '../Header/Header.tsx';
 import { HeaderStyleType } from '../../config/config.ts';
-import { MyListBtn } from '../../components/ui';
+import { MyListBtn } from '../ui/index.tsx';
 
 type FilmPreviewProps = {
   filmPreview: FilmPreviewData;

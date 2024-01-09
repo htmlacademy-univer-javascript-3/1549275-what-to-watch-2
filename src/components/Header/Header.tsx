@@ -1,7 +1,7 @@
 import { AppRoute, AuthStatus, HeaderStyleType } from '../../config/config.ts';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { logoutAction } from '../../store/apiActions.ts';
+import { logoutAction } from '../../store/api-actions.ts';
 // Поменять ссылку на Link
 
 type HeaderProps = {

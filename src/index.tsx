@@ -5,8 +5,8 @@ import App from './components/App/App.tsx';
 import { filmsData } from './mocks/films.ts';
 import { reviewsData } from './mocks/reviews.ts';
 import { store } from './store';
-import ErrorMessage from './components/ErrorMessage/ErrorMessage.tsx';
-import { fetchFilmsAction, checkAuthAction } from './store/apiActions.ts';
+import ErrorMessage from './components/ErrorMessage/error-message.tsx';
+import { fetchFilmsAction, checkAuthAction } from './store/api-actions.ts';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

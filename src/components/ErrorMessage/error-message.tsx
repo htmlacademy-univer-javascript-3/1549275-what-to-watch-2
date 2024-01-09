@@ -1,5 +1,5 @@
 import { useAppSelector } from '../../hooks';
-import './ErrorMessage.css';
+import './error-message.css';
 export const ErrorMessage = (): JSX.Element | null => {
   const error = useAppSelector((state) => state.error);
 

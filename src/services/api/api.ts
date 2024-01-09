@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { StatusCodes } from 'http-status-codes';
-import { processErrorHandle } from '../processErrorHandler/processErrorHandler.tsx';
+import { processErrorHandle } from '../processErrorHandler/process-error-handler.tsx';
 import { getToken } from '../token/token.ts';
 
 const BACKEND_URL = 'https://13.design.pages.academy/wtw/';

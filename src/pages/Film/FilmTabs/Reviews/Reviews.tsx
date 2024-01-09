@@ -1,5 +1,5 @@
-import { ReviewsData } from '../../../../types';
-import ReviewColumn from './ReviewColumn/ReviewColumn.tsx';
+import { ReviewsData } from '../../../../types/index.ts';
+import ReviewColumn from './ReviewColumn/review-column.tsx';
 
 const REVIEWS_PER_COLUMN = 3;
 const MAX_REVIEWS = 6;

@@ -2,8 +2,8 @@ import Footer from '../../components/Footer/Footer.tsx';
 import Header from '../../components/Header/Header.tsx';
 import { HeaderStyleType } from '../../config/config.ts';
 import { FormEvent, useRef } from 'react';
-import { useAppDispatch } from '../../hooks';
-import { loginAction } from '../../store/apiActions.ts';
+import { useAppDispatch } from '../../hooks/index.ts';
+import { loginAction } from '../../store/api-actions.ts';
 
 const SignIn = (): JSX.Element => {
   const loginRef = useRef<HTMLInputElement | null>(null);

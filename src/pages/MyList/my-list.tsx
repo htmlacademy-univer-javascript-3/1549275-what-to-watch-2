@@ -1,8 +1,8 @@
-import FilmList from '../../components/FilmList/FilmList.tsx';
+import FilmList from '../../components/FilmList/film-list.tsx';
 import Header from '../../components/Header/Header.tsx';
 import Footer from '../../components/Footer/Footer.tsx';
 import { HeaderStyleType } from '../../config/config.ts';
-import { useAppSelector } from '../../hooks';
+import { useAppSelector } from '../../hooks/index.ts';
 
 const MyList = (): JSX.Element => {
   const films = useAppSelector((state) => state.films);

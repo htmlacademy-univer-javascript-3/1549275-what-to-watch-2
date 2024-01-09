@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AppDispatch, AuthData, FilmsPreviewData, State, UserData } from '../types';
+import { AppDispatch, AuthData, FilmsPreviewData, State, UserData } from '../types/index.ts';
 import { AxiosInstance } from 'axios';
 import { APIRoute, AppRoute, AuthStatus, TIMEOUT_SHOW_ERROR } from '../config/config.ts';
 import {
@@ -10,7 +10,7 @@ import {
   setFilmsDataLoadingStatus,
   setUserData
 } from './action.ts';
-import { store } from './';
+import { store } from './index.ts';
 import { dropToken, saveToken } from '../services/token/token.ts';
 
 export const fetchFilmsAction = createAsyncThunk<void, undefined, {

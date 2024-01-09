@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { FilmPreviewData } from '../../types';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import FilmList from '../../components/FilmList/FilmList.tsx';
-import FilmPreview from '../../components/FilmPreview/FilmPreview.tsx';
+import { FilmPreviewData } from '../../types/index.ts';
+import { useAppDispatch, useAppSelector } from '../../hooks/index.ts';
+import FilmList from '../../components/FilmList/film-list.tsx';
+import FilmPreview from '../../components/FilmPreview/film-preview.tsx';
 import Footer from '../../components/Footer/Footer.tsx';
-import GenreList from '../../components/GenreList/GenreList.tsx';
+import GenreList from '../../components/GenreList/genre-list.tsx';
 import { changeGenre, getFilmsByGenre } from '../../store/action.ts';
-import { ShowMoreBtn } from '../../components/ui';
+import { ShowMoreBtn } from '../../components/ui/index.tsx';
 
 const START_CARDS_COUNT = 8;
 
