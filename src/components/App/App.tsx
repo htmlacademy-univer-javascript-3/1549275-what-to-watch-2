@@ -1,18 +1,18 @@
 import { Route, Routes } from 'react-router-dom';
-import MainPage from '../../pages/MainPage/main-page.tsx';
-import SignIn from '../../pages/SignIn/sign-in.tsx';
-import MyList from '../../pages/MyList/my-list.tsx';
-import Film from '../../pages/Film/Film.tsx';
-import AddReview from '../../pages/AddReview/add-review.tsx';
-import Player from '../../pages/Player/Player.tsx';
-import NotFound404 from '../../pages/NotFoundPage/not-found-page.tsx';
-import PrivateRoute from '../PrivateRoute/private-route.tsx';
-import Scroll from '../Scroll/Scroll.tsx';
+import MainPage from '../../pages/main-page/main-page.tsx';
+import SignIn from '../../pages/sign-in/sign-in.tsx';
+import MyList from '../../pages/my-list/my-list.tsx';
+import Film from '../../pages/Film/film.tsx';
+import AddReview from '../../pages/add-review/add-review.tsx';
+import Player from '../../pages/player/player.tsx';
+import NotFound404 from '../../pages/not-found-page/not-found-page.tsx';
+import PrivateRoute from '../private-route/private-route.tsx';
+import Scroll from '../scroll/scroll.tsx';
 import { FilmsData, ReviewsData } from '../../types';
 import { AppRoute, AuthStatus } from '../../config/config.ts';
 import { useAppSelector } from '../../hooks';
-import { LoadingScreen } from '../LoadingScreen/loading-screen.tsx';
-import HistoryRouter from '../HistoryRouter/history-router.tsx';
+import { LoadingScreen } from '../loading-screen/loading-screen.tsx';
+import HistoryRouter from '../history-router/history-router.tsx';
 import browserHistory from '../../browser-history.ts';
 
 type AppProps = {

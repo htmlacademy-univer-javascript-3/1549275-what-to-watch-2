@@ -1,9 +1,9 @@
 import { FilmsData } from '../../types/index.ts';
 import Header from '../../components/Header/Header.tsx';
 import { Link, useParams } from 'react-router-dom';
-import NotFound404 from '../NotFoundPage/not-found-page.tsx';
+import NotFound404 from '../not-found-page/not-found-page.tsx';
 import { AppRoute, FilmRoute } from '../../config/config.ts';
-import AddReviewForm from '../../components/AddReviewForm/add-review-form.tsx';
+import AddReviewForm from '../../components/add-review-form/add-review-form.tsx';
 
 type ReviewProps = {
   filmsData: FilmsData;

@@ -1,5 +1,5 @@
 import { FilmData } from '../../../../types/index.ts';
-import NotFoundPage from '../../../NotFoundPage/not-found-page.tsx';
+import NotFoundPage from '../../../not-found-page/not-found-page.tsx';
 
 const MAX_AUTHORS = 4;
 

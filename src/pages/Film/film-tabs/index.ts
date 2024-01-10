@@ -1,5 +1,5 @@
-import Details from './Detail/detail.tsx';
-import Overview from './Overview/overview.tsx';
+import Details from './detail/detail.tsx';
+import Overview from './overview/overview.tsx';
 import Reviews from './Reviews/reviews.tsx';
 
 export {

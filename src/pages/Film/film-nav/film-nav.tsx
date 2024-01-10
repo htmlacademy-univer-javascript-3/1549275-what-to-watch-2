@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { AppRoute, FilmRoute } from '../../../config/config.ts';
-import { FilmData } from '../../../types';
+import { FilmData } from '../../../types/index.ts';
 
 type FilmNavProps = {
   film: FilmData;

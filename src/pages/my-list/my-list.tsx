@@ -1,4 +1,4 @@
-import FilmList from '../../components/FilmList/film-list.tsx';
+import FilmList from '../../components/film-list/film-list.tsx';
 import Header from '../../components/Header/Header.tsx';
 import Footer from '../../components/Footer/Footer.tsx';
 import { HeaderStyleType } from '../../config/config.ts';
