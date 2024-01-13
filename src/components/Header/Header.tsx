@@ -1,6 +1,6 @@
 import { AppRoute, AuthStatus, HeaderStyleType } from '../../config/config.ts';
 import { Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/index.ts';
 import { logoutAction } from '../../store/api-actions.ts';
 // Поменять ссылку на Link
 

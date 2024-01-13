@@ -1,5 +1,5 @@
 import { FilmsData } from '../../types/index.ts';
-import Header from '../../components/Header/Header.tsx';
+import Header from '../../components/header/header.tsx';
 import { Link, useParams } from 'react-router-dom';
 import NotFound404 from '../not-found-page/not-found-page.tsx';
 import { AppRoute, FilmRoute } from '../../config/config.ts';

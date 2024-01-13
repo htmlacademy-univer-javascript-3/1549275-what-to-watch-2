@@ -1,5 +1,5 @@
 import { FilmPreviewData } from '../../types/index.ts';
-import Header from '../Header/Header.tsx';
+import Header from '../header/header.tsx';
 import { HeaderStyleType } from '../../config/config.ts';
 import { MyListBtn } from '../ui/index.tsx';
 

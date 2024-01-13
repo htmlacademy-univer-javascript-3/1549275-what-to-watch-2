@@ -1,6 +1,6 @@
 import FilmList from '../../components/film-list/film-list.tsx';
-import Header from '../../components/Header/Header.tsx';
-import Footer from '../../components/Footer/Footer.tsx';
+import Header from '../../components/header/header.tsx';
+import Footer from '../../components/footer/footer.tsx';
 import { HeaderStyleType } from '../../config/config.ts';
 import { useAppSelector } from '../../hooks/index.ts';
 

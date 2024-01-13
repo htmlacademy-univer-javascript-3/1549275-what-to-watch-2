@@ -3,7 +3,7 @@ import { FilmPreviewData } from '../../types/index.ts';
 import { useAppDispatch, useAppSelector } from '../../hooks/index.ts';
 import FilmList from '../../components/film-list/film-list.tsx';
 import FilmPreview from '../../components/film-preview/film-preview.tsx';
-import Footer from '../../components/Footer/Footer.tsx';
+import Footer from '../../components/footer/footer.tsx';
 import GenreList from '../../components/genre-list/genre-list.tsx';
 import { changeGenre, getFilmsByGenre } from '../../store/action.ts';
 import { ShowMoreBtn } from '../../components/ui/index.tsx';

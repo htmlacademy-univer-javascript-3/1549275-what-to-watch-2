@@ -1,5 +1,5 @@
-import Footer from '../../components/Footer/Footer.tsx';
-import Header from '../../components/Header/Header.tsx';
+import Footer from '../../components/footer/footer.tsx';
+import Header from '../../components/header/header.tsx';
 import { HeaderStyleType } from '../../config/config.ts';
 import { FormEvent, useRef } from 'react';
 import { useAppDispatch } from '../../hooks/index.ts';
