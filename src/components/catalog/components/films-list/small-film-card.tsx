@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RouteLinks } from '../../../../router/consts';
-import { VideoPlayer } from '../../../videoplayer';
+import { VideoPlayer } from '../../../video-player';
 import { Film } from '../../../../types/film';
 
 interface SmallFilmCardProps {

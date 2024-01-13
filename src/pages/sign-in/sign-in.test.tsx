@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 import { createAPI } from '../../services/api';
 import { State } from '../../types/state';
 import { AuthorizationStatus } from '../../types/authorization-status';
-import { SignIn } from './signin';
+import { SignIn } from './sign-in';
 import { ReducerName } from '../../types/reducer-name';
 
 const api = createAPI();
