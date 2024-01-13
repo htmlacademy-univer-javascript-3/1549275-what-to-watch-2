@@ -6,7 +6,7 @@ import { Film } from '../pages/film';
 import { Main } from '../pages/main';
 import { MyList } from '../pages/my-list';
 import { Player } from '../pages/player';
-import { SignIn } from '../pages/signin';
+import { SignIn } from '../pages/sign-in';
 import { Page404 } from '../pages/page-404';
 import { RouteLinks } from './consts';
 

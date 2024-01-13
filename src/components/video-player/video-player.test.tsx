@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { VideoPlayer } from './videoplayer';
+import { VideoPlayer } from './video-player';
 
 const mockProps = {
   src: 'mock-video.mp4',
